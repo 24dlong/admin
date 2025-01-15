@@ -1,0 +1,82 @@
+# This settings file can be used to create org-level settings
+
+# This is the settings that need to be applied to all repositories in the org
+# See https://docs.github.com/en/rest/repos/repos?apiVersion=2022-11-28#create-an-organization-repository for all available settings for a repository
+repository:
+  # Settings for Code security and analysis
+  # Dependabot Alerts
+  security:
+    enableVulnerabilityAlerts: true
+    enableAutomatedSecurityFixes: true
+
+  # The default branch for this repository.
+  default_branch: main
+
+  # Either `true` to allow squash-merging pull requests, or `false` to prevent
+  # squash-merging.
+  allow_squash_merge: true
+
+  # Either `true` to allow merging pull requests with a merge commit, or `false`
+  # to prevent merging pull requests with merge commits.
+  allow_merge_commit: false
+
+  # Either `true` to allow rebase-merging pull requests, or `false` to prevent
+  # rebase-merging.
+  allow_rebase_merge: false
+
+  # Either `true` to allow auto-merge on pull requests,
+  # or `false` to disallow auto-merge.
+  # Default: `false`
+  allow_auto_merge: true
+
+  # Either `true` to allow automatically deleting head branches
+  # when pull requests are merged, or `false` to prevent automatic deletion.
+  # Default: `false`
+  delete_branch_on_merge: true
+
+  # Either `true` to  allow update branch on pull requests,
+  # or `false` to disallow update branch.
+  # Default: `false`
+  allow_update_branch: true
+
+# Collaborators: give specific users access to any repository.
+# See https://docs.github.com/en/rest/collaborators/collaborators?apiVersion=2022-11-28#add-a-repository-collaborator for available options
+collaborators:
+  - username: 24dlong
+    # The permission to grant the collaborator. Can be one of:
+    # * `pull` - can pull, but not push to or administer this repository.
+    # * `push` - can pull and push, but not administer this repository.
+    # * `admin` - can pull, push and administer this repository.
+    permission: admin
+
+# Branch protection rules
+# See https://docs.github.com/en/rest/branches/branch-protection?apiVersion=2022-11-28#update-branch-protection for available options
+branches:
+  # If the name of the branch value is specified as `default`, then the app will create a branch protection rule to apply against the default branch in the repo
+  - name: main
+    protection:
+      # Required. Require at least one approving review on a pull request, before merging. Set to null to disable.
+      required_pull_request_reviews:
+        # The number of approvals required. (1-6)
+        required_approving_review_count: 1
+        # Dismiss approved reviews automatically when a new commit is pushed.
+        dismiss_stale_reviews: true
+        # Blocks merge until code owners have reviewed.
+        require_code_owner_reviews: true
+        # Whether the most recent reviewable push must be approved by someone other than the person who pushed it.
+        require_last_push_approval: true
+        # Allow specific users, teams, or apps to bypass pull request requirements. Set to null to disable.
+        bypass_pull_request_allowances:
+          apps: []
+          users: []
+          teams: []
+      # Required. Require status checks to pass before merging. Set to null to disable
+      required_status_checks:
+        # Required. Require branches to be up to date before merging.
+        strict: true
+        # Required. The list of status checks to require in order to merge into this branch
+        contexts: ["quality-gate"]
+      # Required. Enforce all configured restrictions for administrators. Set to true to enforce required status checks for repository administrators. Set to null to disable.
+      enforce_admins: true
+      # Required. Restrict who can push to this branch. Team and user restrictions are only available for organization-owned repositories. Set to null to disable.
+      restrictions: null
