@@ -1,0 +1,8 @@
+branches:
+  # If the name of the branch value is specified as `default`, then the app will create a branch protection rule to apply against the default branch in the repo
+  - name: default
+    protection:      # Required. Require status checks to pass before merging. Set to null to disable
+      required_status_checks:
+        checks:
+          - context: "Quality Gate | Visual Tests"
+            app_id: 15368
