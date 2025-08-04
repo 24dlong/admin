@@ -4,5 +4,5 @@ branches:
     protection:      # Required. Require status checks to pass before merging. Set to null to disable
       required_status_checks:
         checks:
-          - context: "Quality Gate | Visual Tests"
-            app_id: 15368
+          - context: "UI Tests"
+            app_id: null
