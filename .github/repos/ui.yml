@@ -6,3 +6,5 @@ branches:
         checks:
           - context: "UI Tests"
             app_id: null
+          - context: "UI Review"
+            app_id: null
