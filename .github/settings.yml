@@ -6,8 +6,8 @@ repository:
   # Settings for Code security and analysis
   # Dependabot Alerts
   security:
-    enableVulnerabilityAlerts: true
-    enableAutomatedSecurityFixes: true
+    enableVulnerabilityAlerts: false
+    enableAutomatedSecurityFixes: false
 
   # The default branch for this repository.
   default_branch: main
