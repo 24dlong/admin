@@ -15,26 +15,18 @@ jobs:
     runs-on: ubuntu-latest
     env:
       # Version/tag of github/safe-settings repo to use:
-      SAFE_SETTINGS_VERSION: 2.1.14
+      SAFE_SETTINGS_VERSION: 2.1.20
       # Path on GHA runner box where safe-settings code downloaded to:
       SAFE_SETTINGS_CODE_DIR: ${{ github.workspace }}/.safe-settings-code
     steps:
       # Self-checkout of 'admin' repo for access to safe-settings config:
       - uses: actions/checkout@v4
-      
-      - name: Echo Environment Variables
-        run: |
-          echo "GH_ORG: ${{ github.repository_owner }}"
-      
-      - name: Echo Environment Variables 2
-        run: |
-          echo "APP_ID: ${{ vars.SAFE_SETTINGS_APP_ID}}"
 
       # Checkout of safe-settings repo for running full sync:
       - uses: actions/checkout@v4
         with:
           repository: github/safe-settings
-          ref: 2.1.14
+          ref: ${{ env.SAFE_SETTINGS_VERSION }}
           path: ${{ github.workspace }}/.safe-settings-code
       - uses: actions/setup-node@v4
       - run: npm install
