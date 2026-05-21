@@ -9,6 +9,8 @@ on:
   push:
     branches:
       - main
+    paths:
+      - 'safe-settings.yml'
 
 jobs:
   sync-safe-settings:
