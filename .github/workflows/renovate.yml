@@ -29,19 +29,31 @@ jobs:
         with:
           client-id: ${{ vars.RENOVATE_GITHUB_CLIENT_ID }}
           private-key: ${{ secrets.RENOVATE_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
 
       - name: Generate Private Registry Token
         id: npm-token
         run: |
             echo "token=$(aws codeartifact get-authorization-token \
-            --domain ${{ inputs.AWS_CODE_ARTIFACT_DOMAIN }} \
-            --domain-owner ${{ inputs.AWS_ACCOUNT_ID }} \
+            --domain ${{ vars.AWS_CODE_ARTIFACT_DOMAIN }} \
+            --domain-owner ${{ vars.AWS_CODE_ARTIFACT_ACCOUNT_ID }} \
             --query authorizationToken \
             --output text)" >> $GITHUB_OUTPUT
         shell: bash
 
       - name: Run Renovate
         uses: renovatebot/github-action@v46.1.4
+        with:
+          env-regex: "^(?:RENOVATE_\\w+|LOG_LEVEL|CODEARTIFACT_\\w+|AWS_\\w+|REGISTRY_\\w+)$"
         env:
           RENOVATE_TOKEN: ${{ steps.github-token.outputs.token }}
+          RENOVATE_AUTODISCOVER: true
           CODEARTIFACT_AUTH_TOKEN: ${{ steps.npm-token.outputs.token }}
+          RENOVATE_CUSTOM_ENV_VARIABLES: >-
+            {"AWS_CODE_ARTIFACT_DOMAIN":"${{ vars.AWS_CODE_ARTIFACT_DOMAIN }}",
+            "AWS_REGION":"${{ vars.AWS_REGION }}",
+            "AWS_ACCOUNT_ID":"${{ vars.AWS_CODE_ARTIFACT_ACCOUNT_ID }}",
+            "AWS_CODE_ARTIFACT_REPOSITORY":"${{ vars.AWS_CODE_ARTIFACT_REPOSITORY }}",
+            "REGISTRY_NAMESPACE":"${{ vars.REGISTRY_NAMESPACE }}",
+            "CODEARTIFACT_AUTH_TOKEN":"${{ steps.npm-token.outputs.token }}",
+            "CI":"true"}
