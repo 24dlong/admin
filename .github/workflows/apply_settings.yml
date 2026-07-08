@@ -10,7 +10,9 @@ on:
     branches:
       - main
     paths:
-      - 'safe-settings.yml'
+      - '.github/settings.yml'
+      - '.github/repos/**'
+      - '.github/suborgs/**'
 
 jobs:
   sync-safe-settings:
