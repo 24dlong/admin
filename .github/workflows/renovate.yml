@@ -34,11 +34,20 @@ jobs:
       - name: Generate Private Registry Token
         id: npm-token
         run: |
-            echo "token=$(aws codeartifact get-authorization-token \
-            --domain ${{ vars.AWS_CODE_ARTIFACT_DOMAIN }} \
-            --domain-owner ${{ vars.AWS_CODE_ARTIFACT_ACCOUNT_ID }} \
+          token="$(aws codeartifact get-authorization-token \
+            --domain "${{ vars.AWS_CODE_ARTIFACT_DOMAIN }}" \
+            --domain-owner "${{ vars.AWS_CODE_ARTIFACT_ACCOUNT_ID }}" \
             --query authorizationToken \
-            --output text)" >> $GITHUB_OUTPUT
+            --output text)"
+          registry_host="${{ vars.AWS_CODE_ARTIFACT_DOMAIN }}-${{ vars.AWS_CODE_ARTIFACT_ACCOUNT_ID }}.d.codeartifact.${{ vars.AWS_REGION }}.amazonaws.com"
+          registry_url="https://${registry_host}/npm/${{ vars.AWS_CODE_ARTIFACT_REPOSITORY }}/"
+
+          echo "::add-mask::${token}"
+          {
+            echo "token=${token}"
+            echo "registry_host=${registry_host}"
+            echo "registry_url=${registry_url}"
+          } >> "$GITHUB_OUTPUT"
         shell: bash
 
       - name: Run Renovate
@@ -48,6 +57,13 @@ jobs:
         env:
           RENOVATE_TOKEN: ${{ steps.github-token.outputs.token }}
           RENOVATE_AUTODISCOVER: true
+          RENOVATE_HOST_RULES: >-
+            [{"hostType":"npm","matchHost":"${{ steps.npm-token.outputs.registry_url }}","token":"${{ steps.npm-token.outputs.token }}"}]
+          RENOVATE_NPMRC: |
+            ${{ vars.REGISTRY_NAMESPACE }}:registry=${{ steps.npm-token.outputs.registry_url }}
+            //${{ steps.npm-token.outputs.registry_host }}/npm/${{ vars.AWS_CODE_ARTIFACT_REPOSITORY }}/:_authToken=${{ steps.npm-token.outputs.token }}
+            always-auth=true
+          RENOVATE_NPMRC_MERGE: "true"
           CODEARTIFACT_AUTH_TOKEN: ${{ steps.npm-token.outputs.token }}
           RENOVATE_CUSTOM_ENV_VARIABLES: >-
             {"AWS_CODE_ARTIFACT_DOMAIN":"${{ vars.AWS_CODE_ARTIFACT_DOMAIN }}",
