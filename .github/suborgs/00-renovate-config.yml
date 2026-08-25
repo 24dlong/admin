@@ -1,5 +1,12 @@
 # Same default-branch rules as default.yml, but no required status checks.
 # Replaces the old .github/repos/renovate-config.yml branches override.
+#
+# Filename is prefixed "00-" so it sorts (and loads) BEFORE default.yml.
+# safe-settings 2.1.17's getSubOrgConfig() picks the first matching suborg
+# pattern in load order, so this exact-match exception must be registered
+# before default.yml's "*" catch-all — otherwise "*" would match
+# renovate-config first and this file would never be used. See default.yml
+# for the full explanation.
 suborgrepos:
   - renovate-config
 
