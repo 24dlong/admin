@@ -2,8 +2,10 @@
 # repos such as admin). New repos inherit this on create/sync — no per-repo file.
 # renovate-config is a separate suborg so it is not required to pass status checks.
 # A repo may belong to only one suborg, so this glob must not overlap that file.
+# Use minimatch negation (!name), not extglob (!(name)), which did not match repos
+# under safe-settings 2.1.17.
 suborgrepos:
-  - "!(renovate-config)"
+  - "!renovate-config"
 
 rulesets:
   - name: Default branch protection
