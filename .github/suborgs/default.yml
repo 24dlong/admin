@@ -1,11 +1,20 @@
-# Apply a repository ruleset to every repo except renovate-config (and restricted
-# repos such as admin). New repos inherit this on create/sync — no per-repo file.
-# renovate-config is a separate suborg so it is not required to pass status checks.
-# A repo may belong to only one suborg, so this glob must not overlap that file.
-# Use minimatch negation (!name), not extglob (!(name)), which did not match repos
-# under safe-settings 2.1.17.
+# Apply a repository ruleset to every repo. New repos inherit this on
+# create/sync — no per-repo file needed.
+#
+# IMPORTANT — safe-settings 2.1.17 quirk: lib/glob.js is NOT minimatch. It has
+# no negation/extglob support at all. Any pattern without "*" is turned into a
+# plain substring regex (`.*<pattern>.*`), so "!renovate-config" matches
+# nothing (no repo name contains "!"). "*" is the only pattern this engine
+# treats as a real wildcard (it becomes `^([^/]*)$`, i.e. match everything).
+#
+# renovate-config needs an exception (no required status checks). Since we
+# can't exclude it here, it's handled by 00-renovate-config.yml, which must
+# sort alphabetically BEFORE this file: getSubOrgConfig() returns the FIRST
+# matching pattern in insertion order (insertion order == suborgs/ directory
+# listing order == alphabetical by filename), so the exact-match "renovate-config"
+# pattern must be registered before this "*" catch-all or "*" wins for every repo.
 suborgrepos:
-  - "!renovate-config"
+  - "*"
 
 rulesets:
   - name: Default branch protection
