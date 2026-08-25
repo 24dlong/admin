@@ -48,3 +48,10 @@ collaborators:
     # * `push` - can pull and push, but not administer this repository.
     # * `admin` - can pull, push and administer this repository.
     permission: admin
+
+# Remove classic branch protection. Omitting this section leaves existing classic
+# rules in place because the branches plugin never runs. Empty protection deletes
+# the default-branch rule so only the suborg rulesets remain.
+branches:
+  - name: default
+    protection: null
