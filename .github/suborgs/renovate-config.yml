@@ -1,20 +1,16 @@
-# Apply a repository ruleset to every repo except renovate-config (and restricted
-# repos such as admin). New repos inherit this on create/sync — no per-repo file.
-# renovate-config is a separate suborg so it is not required to pass status checks.
-# A repo may belong to only one suborg, so this glob must not overlap that file.
+# Same default-branch rules as default.yml, but no required status checks.
+# Replaces the old .github/repos/renovate-config.yml branches override.
 suborgrepos:
-  - "!(renovate-config)"
+  - renovate-config
 
 rulesets:
   - name: Default branch protection
     target: branch
     enforcement: active
     bypass_actors:
-      # Workflows GitHub App (GH_WORKFLOWS_APP_*); App ID, not Client ID
       - actor_id: 4704536
         actor_type: Integration
         bypass_mode: always
-      # Repository admin (owner), equivalent to classic enforce_admins: false
       - actor_id: 5
         actor_type: RepositoryRole
         bypass_mode: always
@@ -33,9 +29,3 @@ rulesets:
           require_last_push_approval: false
           required_approving_review_count: 0
           required_review_thread_resolution: true
-      - type: required_status_checks
-        parameters:
-          strict_required_status_checks_policy: true
-          required_status_checks:
-            - context: "Quality Gate | Core"
-              integration_id: 15368
