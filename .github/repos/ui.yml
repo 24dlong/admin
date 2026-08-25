@@ -1,10 +1,16 @@
-branches:
-  # If the name of the branch value is specified as `default`, then the app will create a branch protection rule to apply against the default branch in the repo
-  - name: default
-    protection:      # Required. Require status checks to pass before merging. Set to null to disable
-      required_status_checks:
-        checks:
-          - context: "UI Tests"
-            app_id: null
-          - context: "UI Review"
-            app_id: null
+# Extra required checks on top of the default-branch ruleset (rulesets layer by name).
+rulesets:
+  - name: UI status checks
+    target: branch
+    enforcement: active
+    conditions:
+      ref_name:
+        include: ["~DEFAULT_BRANCH"]
+        exclude: []
+    rules:
+      - type: required_status_checks
+        parameters:
+          strict_required_status_checks_policy: true
+          required_status_checks:
+            - context: "UI Tests"
+            - context: "UI Review"
