@@ -18,8 +18,10 @@ jobs:
   sync-safe-settings:
     runs-on: ubuntu-latest
     env:
-      # Version/tag of github/safe-settings repo to use:
-      SAFE_SETTINGS_VERSION: 2.1.21
+      # Version/tag of github/safe-settings repo to use.
+      # Stay on 2.1.18: 2.1.19+ crashes GHA full-sync because Probot 14
+      # leaves probot.log null (github/safe-settings#955).
+      SAFE_SETTINGS_VERSION: 2.1.18
       # Path on GHA runner box where safe-settings code downloaded to:
       SAFE_SETTINGS_CODE_DIR: ${{ github.workspace }}/.safe-settings-code
     steps:
