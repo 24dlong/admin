@@ -1,6 +1,6 @@
 # Extra required checks on top of the default-branch ruleset (rulesets layer by name).
 rulesets:
-  - name: UI status checks
+  - name: Expo status checks
     target: branch
     enforcement: active
     conditions:
@@ -12,11 +12,6 @@ rulesets:
         parameters:
           strict_required_status_checks_policy: true
           required_status_checks:
-            # Reported by javascript-pull-request.yml (Expo and visual-tests enabled).
+            # Reported by javascript-pull-request.yml (expo-working-directory set).
             - context: "Quality Gate / Expo"
               integration_id: 15368
-            - context: "Quality Gate / Visual Tests"
-              integration_id: 15368
-            # Reported by Chromatic.
-            - context: "UI Tests"
-            - context: "UI Review"
