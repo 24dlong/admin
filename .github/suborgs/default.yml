@@ -48,5 +48,7 @@ rulesets:
         parameters:
           strict_required_status_checks_policy: true
           required_status_checks:
-            - context: "Quality Gate | Core"
+            # Reported by every repo's caller job named "Quality Gate" (reusable
+            # workflow job "Core"): "<caller job name> / <job name>".
+            - context: "Quality Gate / Core"
               integration_id: 15368
